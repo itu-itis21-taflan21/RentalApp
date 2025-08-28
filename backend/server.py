@@ -420,12 +420,12 @@ async def update_booking_status(
         raise HTTPException(status_code=403, detail="Not authorized")
     
     # Only owner can approve/reject
-    if status in [BookingStatus.APPROVED, BookingStatus.REJECTED] and booking.owner_id != user_id:
+    if status_update.status in [BookingStatus.APPROVED, BookingStatus.REJECTED] and booking.owner_id != user_id:
         raise HTTPException(status_code=403, detail="Only owner can approve/reject bookings")
     
     await db.bookings.update_one(
         {"id": booking_id},
-        {"$set": {"status": status, "updated_at": datetime.utcnow()}}
+        {"$set": {"status": status_update.status, "updated_at": datetime.utcnow()}}
     )
     
     updated_booking = await db.bookings.find_one({"id": booking_id})
