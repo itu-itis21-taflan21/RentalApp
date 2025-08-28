@@ -63,15 +63,19 @@ def make_request(method: str, endpoint: str, data: Dict = None, headers: Dict = 
         else:
             return {"error": f"Unsupported method: {method}"}
         
+        try:
+            response_data = response.json() if response.content else {}
+        except json.JSONDecodeError:
+            response_data = {"raw_response": response.text}
+        
         return {
             "status_code": response.status_code,
-            "data": response.json() if response.content else {},
-            "success": 200 <= response.status_code < 300
+            "data": response_data,
+            "success": 200 <= response.status_code < 300,
+            "raw_text": response.text if response.status_code >= 400 else None
         }
     except requests.exceptions.RequestException as e:
         return {"error": str(e), "success": False}
-    except json.JSONDecodeError:
-        return {"error": "Invalid JSON response", "success": False, "status_code": response.status_code}
 
 def test_user_registration():
     """Test user registration endpoint"""
