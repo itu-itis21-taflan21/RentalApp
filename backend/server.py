@@ -523,11 +523,14 @@ async def get_popular_items(limit: int = 10):
 async def get_categories():
     return [category.value for category in ItemCategory]
 
+class PaymentRequest(BaseModel):
+    booking_id: str
+    payment_method: str
+
 # Mock payment endpoint
 @api_router.post("/payments/process", response_model=Dict[str, Any])
 async def process_payment(
-    booking_id: str,
-    payment_method: str,
+    payment_data: PaymentRequest,
     user_id: str = Depends(verify_token)
 ):
     # Mock payment processing
@@ -537,7 +540,7 @@ async def process_payment(
         "payment_id": payment_id,
         "status": "success",
         "message": "Payment processed successfully (Mock)",
-        "booking_id": booking_id
+        "booking_id": payment_data.booking_id
     }
 
 # Include the router in the main app
