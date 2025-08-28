@@ -115,7 +115,7 @@ def test_user_registration():
     
     # Register second user for testing interactions
     user2_data = {
-        "email": "jane.smith@example.com",
+        "email": f"jane.smith{unique_id}@example.com",
         "password": "AnotherPass456!",
         "first_name": "Jane",
         "last_name": "Smith",
