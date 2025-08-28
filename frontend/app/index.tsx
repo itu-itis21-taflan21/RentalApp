@@ -21,7 +21,7 @@ import BookingDetailsScreen from './screens/BookingDetailsScreen';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
