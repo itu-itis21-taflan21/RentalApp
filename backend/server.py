@@ -264,26 +264,29 @@ async def get_current_user(user_id: str = Depends(verify_token)):
     return UserProfile(**user_doc)
 
 # User endpoints
+class UserProfileUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    bio: Optional[str] = None
+    profile_photo: Optional[str] = None
+    location: Optional[Dict[str, float]] = None
+
 @api_router.put("/users/profile", response_model=UserProfile)
 async def update_profile(
-    first_name: Optional[str] = None,
-    last_name: Optional[str] = None,
-    bio: Optional[str] = None,
-    profile_photo: Optional[str] = None,
-    location: Optional[Dict[str, float]] = None,
+    profile_data: UserProfileUpdate,
     user_id: str = Depends(verify_token)
 ):
     update_data = {}
-    if first_name:
-        update_data["first_name"] = first_name
-    if last_name:
-        update_data["last_name"] = last_name
-    if bio is not None:
-        update_data["bio"] = bio
-    if profile_photo:
-        update_data["profile_photo"] = profile_photo
-    if location:
-        update_data["location"] = location
+    if profile_data.first_name:
+        update_data["first_name"] = profile_data.first_name
+    if profile_data.last_name:
+        update_data["last_name"] = profile_data.last_name
+    if profile_data.bio is not None:
+        update_data["bio"] = profile_data.bio
+    if profile_data.profile_photo:
+        update_data["profile_photo"] = profile_data.profile_photo
+    if profile_data.location:
+        update_data["location"] = profile_data.location
     
     await db.users.update_one({"id": user_id}, {"$set": update_data})
     
