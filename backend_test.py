@@ -133,9 +133,14 @@ def test_user_login():
     """Test user login endpoint"""
     print("\n=== Testing User Login ===")
     
-    # Test successful login
+    if not test_data['users']:
+        print_test_result("Login Test Setup", False, "No users available for login test")
+        return
+    
+    # Test successful login with the registered user
+    user_email = test_data['users'][0]['email']
     login_data = {
-        "email": "john.doe@example.com",
+        "email": user_email,
         "password": "SecurePass123!"
     }
     
