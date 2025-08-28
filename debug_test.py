@@ -44,8 +44,10 @@ def debug_request(method, endpoint, data=None, token=None):
 
 # First, let's register and get a token
 print("=== Getting Authentication Token ===")
+import time
+unique_id = str(int(time.time()))
 user_data = {
-    "email": "debug@test.com",
+    "email": f"debug{unique_id}@test.com",
     "password": "TestPass123!",
     "first_name": "Debug",
     "last_name": "User"
