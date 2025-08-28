@@ -400,10 +400,13 @@ async def get_my_bookings(user_id: str = Depends(verify_token)):
     }).to_list(100)
     return [Booking(**booking) for booking in bookings]
 
+class BookingStatusUpdate(BaseModel):
+    status: BookingStatus
+
 @api_router.put("/bookings/{booking_id}/status", response_model=Booking)
 async def update_booking_status(
     booking_id: str,
-    status: BookingStatus,
+    status_update: BookingStatusUpdate,
     user_id: str = Depends(verify_token)
 ):
     booking_doc = await db.bookings.find_one({"id": booking_id})
