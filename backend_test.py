@@ -81,9 +81,12 @@ def test_user_registration():
     """Test user registration endpoint"""
     print("\n=== Testing User Registration ===")
     
+    import time
+    unique_id = str(int(time.time()))
+    
     # Test successful registration
     user_data = {
-        "email": "john.doe@example.com",
+        "email": f"john.doe{unique_id}@example.com",
         "password": "SecurePass123!",
         "first_name": "John",
         "last_name": "Doe",
