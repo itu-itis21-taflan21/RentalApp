@@ -431,11 +431,14 @@ async def update_booking_status(
     updated_booking = await db.bookings.find_one({"id": booking_id})
     return Booking(**updated_booking)
 
+class DamagePhotosUpload(BaseModel):
+    photos: List[str]
+    photo_type: str  # "before" or "after"
+
 @api_router.post("/bookings/{booking_id}/damage-photos", response_model=Dict[str, str])
 async def upload_damage_photos(
     booking_id: str,
-    photos: List[str],
-    photo_type: str,  # "before" or "after"
+    damage_data: DamagePhotosUpload,
     user_id: str = Depends(verify_token)
 ):
     booking_doc = await db.bookings.find_one({"id": booking_id})
@@ -447,14 +450,14 @@ async def upload_damage_photos(
     if booking.renter_id != user_id and booking.owner_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     
-    field_name = "damage_photos_before" if photo_type == "before" else "damage_photos_after"
+    field_name = "damage_photos_before" if damage_data.photo_type == "before" else "damage_photos_after"
     
     await db.bookings.update_one(
         {"id": booking_id},
-        {"$set": {field_name: photos, "updated_at": datetime.utcnow()}}
+        {"$set": {field_name: damage_data.photos, "updated_at": datetime.utcnow()}}
     )
     
-    return {"message": f"Damage photos ({photo_type}) uploaded successfully"}
+    return {"message": f"Damage photos ({damage_data.photo_type}) uploaded successfully"}
 
 # Review endpoints
 @api_router.post("/reviews", response_model=Review)
