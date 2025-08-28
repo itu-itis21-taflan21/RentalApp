@@ -157,7 +157,7 @@ def test_user_login():
     
     # Test invalid credentials
     invalid_login = {
-        "email": "john.doe@example.com",
+        "email": user_email,
         "password": "WrongPassword"
     }
     
